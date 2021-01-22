@@ -21,6 +21,8 @@ Swagger(app)
 
 face_cascade = cv2.CascadeClassifier('./models/haarcascade_frontalface_default.xml')
 
+class_dog_cat = load_model('./models/cats_or_dogs.h5')
+
 def dice_coef(y_true, y_pred):
     y_true_f = K.flatten(y_true)
     y_pred_f = K.flatten(y_pred)
@@ -109,7 +111,7 @@ def merge_img(name_image1, name_image2, name_new_img):
 @app.route('/02_facedetect',methods=['POST'])
 def face_detect():
     """Detect face on image from url
-    Simple model for face detection. For fun and experience.
+    Simple model for experience.
     ---
     parameters:
       - name: url
@@ -145,3 +147,43 @@ def face_detect():
       print(e)
       return abort(400)
 
+@app.route('/03_dog_or_cat',methods=['POST'])
+def cat_dog():
+    """Determines if the image contains a cat or dog.
+    Simple model for experience.
+    ---
+    parameters:
+      - name: url
+        in: body
+        required: true
+        example: {'url':'https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg'}
+    responses:
+      200:
+        description: image with detected face
+    """
+       
+    try:
+      content = request.get_json()
+
+      img_cat_dog = url_to_image(content['url'])
+
+      result = CatOrDog_cl(img_cat_dog)
+      
+
+      return 'Its a ' + result 
+    
+    except Exception as e:
+      print(e)
+      return abort(400)
+
+def CatOrDog_cl(image):
+
+	image = cv2.resize(image, (150,150), interpolation = cv2.INTER_AREA)
+	image = image.reshape(1,150,150,3) 
+	res = str(class_dog_cat.predict_classes(image, 1, verbose = 0)[0][0])
+	if res == "0":
+		res = "Cat"
+	else:
+		res = "Dog"
+
+	return res
