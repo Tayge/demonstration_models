@@ -1,0 +1,8 @@
+opencv-python
+imutils
+flasgger
+numpy
+tensorflow
+keras
+matplotlib
+Pillow
