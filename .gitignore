@@ -1,1 +1,3 @@
 /app/__pycache__/*
+/app/static/*
+!/app/static/orig20210121-231302.jpg
