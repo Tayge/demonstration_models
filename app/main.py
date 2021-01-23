@@ -159,7 +159,7 @@ def cat_dog():
         example: {'url':'https://c.files.bbci.co.uk/12A9B/production/_111434467_gettyimages-1143489763.jpg'}
     responses:
       200:
-        description: image with detected face
+        description: The answer to the question, cat or dog.
     """
        
     try:
